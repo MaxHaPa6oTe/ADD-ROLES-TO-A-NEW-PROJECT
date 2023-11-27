@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updateAt   DateTime @updatedAt @map("updated_at")
+
+  email      String   @unique
+  password   String
+  name       String   @unique
+}
+
+model Otmetka {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updateAt   DateTime @updatedAt @map("updated_at")
+
+  name       String   @unique
+
+  worker       Worker @relation(fields: [workerId], references: [id])
+  workerId     Int  @map("worker_id")
+}
+
+model Worker {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updateAt   DateTime @updatedAt @map("updated_at")
+
+  otdel      String
+  name       String   @unique
+  phone      String   @default("")
+  avatarPath String   @default("/uploads/default-avatar.png") @map("avatar_path")
+
+  otmetka    Otmetka[]
+}
