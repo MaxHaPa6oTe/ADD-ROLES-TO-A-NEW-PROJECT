@@ -15,24 +15,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkerController = void 0;
 const common_1 = require("@nestjs/common");
 const worker_service_1 = require("./worker.service");
-const worker_dto_1 = require("./worker.dto");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
+const path_1 = require("path");
 let WorkerController = class WorkerController {
     constructor(workerService) {
         this.workerService = workerService;
     }
-    async create(dto) {
-        return this.workerService.create(dto);
+    create(file) {
+        console.log('file', file);
+        return 'file upload api';
     }
 };
 exports.WorkerController = WorkerController;
 __decorate([
-    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     (0, common_1.HttpCode)(201),
-    (0, common_1.Post)('create'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
+        storage: (0, multer_1.diskStorage)({
+            destination: './files',
+            filename: (req, file, callback) => {
+                const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+                const ext = path_1.default.extname(file.originalname);
+                const filename = `${file.originalname}-${uniqueSuffix}${ext}`;
+                callback(null, filename);
+            }
+        })
+    })),
+    (0, common_1.Post)('/file'),
+    __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [worker_dto_1.workerDto]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
 ], WorkerController.prototype, "create", null);
 exports.WorkerController = WorkerController = __decorate([
     (0, common_1.Controller)('worker'),
