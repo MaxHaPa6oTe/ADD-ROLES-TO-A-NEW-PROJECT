@@ -9,7 +9,7 @@ import { User } from '@prisma/client';
 @Injectable()
 export class AuthService {
     constructor(private prisma: PrismaService,
-        private jwt: JwtService) {}
+        private jwt: JwtService) { }
 
     async login(dto: logDto) {
         const user = await this.validateUser(dto)
@@ -20,15 +20,17 @@ export class AuthService {
             ...tokens
         }
     }
-   
+
     async getNewTokens(refreshToken: string) {
         const result = await this.jwt.verifyAsync(refreshToken)
         if (!result) {
             throw new UnauthorizedException('Инвалид токен')
         }
-        const user = await this.prisma.user.findUnique({where: {
-            id: result.id
-        } })
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id: result.id
+            }
+        })
         const tokens = await this.issueTokens(user.id)
 
         return {
@@ -69,7 +71,7 @@ export class AuthService {
     }
 
     private async issueTokens(userId: number) {
-        const data = {id: userId}
+        const data = { id: userId }
         const accessToken = this.jwt.sign(data, {
             expiresIn: '1h',
         })
