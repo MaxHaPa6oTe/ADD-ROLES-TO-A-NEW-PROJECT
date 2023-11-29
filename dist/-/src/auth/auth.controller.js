@@ -53,7 +53,7 @@ __decorate([
 ], AuthController.prototype, "getNewTokens", null);
 __decorate([
     (0, common_1.UsePipes)(new common_1.ValidationPipe()),
-    (0, common_1.HttpCode)(200),
+    (0, common_1.HttpCode)(201),
     (0, common_1.Post)('reg'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),

@@ -16,17 +16,6 @@ let WorkerService = class WorkerService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async create(dto) {
-        const worker = await this.prisma.worker.create({
-            data: {
-                otdel: dto.otdel,
-                name: dto.name,
-                phone: dto.phone,
-                avatarPath: dto.avatarPath
-            }
-        });
-        return worker.id;
-    }
 };
 exports.WorkerService = WorkerService;
 exports.WorkerService = WorkerService = __decorate([
