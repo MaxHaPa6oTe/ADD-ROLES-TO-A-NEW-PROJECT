@@ -5,10 +5,10 @@ import { PrismaService } from './prisma.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { WorkerModule } from './worker/worker.module';
-import { MulterModule } from '@nestjs/platform-express'
+
 @Module({
   imports: [AuthModule, ConfigModule.forRoot(), 
-  WorkerModule, MulterModule.register({dest:'./uploads'})],
+  WorkerModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

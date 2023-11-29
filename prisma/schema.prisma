@@ -38,7 +38,7 @@ model Worker {
 
   otdel      String
   name       String   @unique
-  phone      String   @default("")
+  phone      String   @default("") @unique
   avatarPath String   @default("/uploads/default-avatar.png") @map("avatar_path")
 
   otmetka    Otmetka[]

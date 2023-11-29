@@ -1,4 +1,4 @@
-import { Query,UseInterceptors,Controller,UsePipes,ValidationPipe,Body,Post,HttpCode, UploadedFile } from '@nestjs/common';
+import { Query,UseInterceptors,Controller,UsePipes,ValidationPipe,Body,Post,HttpCode, UploadedFile, ParseFilePipe, FileTypeValidator } from '@nestjs/common';
 import { WorkerService } from './worker.service';
 import { workerDto } from './worker.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -9,23 +9,23 @@ import path from 'path';
 export class WorkerController {
   constructor(private readonly workerService: WorkerService) {}
 
-  // @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe())
   @HttpCode(201)
-  @UseInterceptors(FileInterceptor('file',{
-    storage: diskStorage({
-      destination: './files',
-      filename: (req,file,callback) => {
-      const uniqueSuffix =
-        Date.now() + '-' + Math.round(Math.random()*1e9)
-        const ext = path.extname(file.originalname);
-        const filename = `${file.originalname}-${uniqueSuffix}${ext}`;
-        callback(null,filename)
-      }
-    })
-  }))
-  @Post('/file')
-  create(@UploadedFile() file:Express.Multer.File) {
-    console.log('file', file)
-    return 'file upload api'
+  @Post('create')
+  @UseInterceptors(FileInterceptor('file'))
+  createWorker (
+    @Body() body: workerDto,
+    @UploadedFile() file:any
+    //   new ParseFilePipe({
+    //     validators: [
+    //       new FileTypeValidator({ fileType: 'image/jpeg' }),
+    //     ]
+    //   })
+    // )
+    // file: Express.Multer.File
+    ,
+    
+  ) {
+    return this.workerService.create(body, file)
   }
 }

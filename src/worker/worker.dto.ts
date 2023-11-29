@@ -10,5 +10,5 @@ export class workerDto {
     @IsString()
     phone: string
 
-    avatarPath: string
+    file: any
 }
