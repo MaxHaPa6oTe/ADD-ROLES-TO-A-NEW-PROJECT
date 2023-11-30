@@ -25,10 +25,7 @@ model Otmetka {
   createdAt  DateTime @default(now()) @map("created_at")
   updateAt   DateTime @updatedAt @map("updated_at")
 
-  name       String   @unique
-
-  worker       Worker @relation(fields: [workerId], references: [id])
-  workerId     Int  @map("worker_id")
+  karta       String
 }
 
 model Worker {
@@ -37,9 +34,8 @@ model Worker {
   updateAt   DateTime @updatedAt @map("updated_at")
 
   otdel      String
-  name       String   @unique
+  name       String
+  karta      String   @unique
   phone      String   @default("") @unique
   avatarPath String   @default("/uploads/default-avatar.png") @map("avatar_path")
-
-  otmetka    Otmetka[]
 }
