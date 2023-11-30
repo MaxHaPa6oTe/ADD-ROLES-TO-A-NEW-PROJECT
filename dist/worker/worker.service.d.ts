@@ -11,6 +11,23 @@ export declare class WorkerService {
         updateAt: Date;
         otdel: string;
         name: string;
+        karta: string;
+        phone: string;
+        avatarPath: string;
+    }>;
+    del(idRaba: number): Promise<{
+        message: string;
+    }>;
+    update(id: number, body: workerDto, file: any): Promise<{
+        message: string;
+    }>;
+    obzorRaba(id: number): Promise<{
+        id: number;
+        createdAt: Date;
+        updateAt: Date;
+        otdel: string;
+        name: string;
+        karta: string;
         phone: string;
         avatarPath: string;
     }>;

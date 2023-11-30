@@ -9,6 +9,23 @@ export declare class WorkerController {
         updateAt: Date;
         otdel: string;
         name: string;
+        karta: string;
+        phone: string;
+        avatarPath: string;
+    }>;
+    del(id: number): Promise<{
+        message: string;
+    }>;
+    update(body: workerDto, file: any, id: number): Promise<{
+        message: string;
+    }>;
+    obzorRaba(id: number): Promise<{
+        id: number;
+        createdAt: Date;
+        updateAt: Date;
+        otdel: string;
+        name: string;
+        karta: string;
         phone: string;
         avatarPath: string;
     }>;

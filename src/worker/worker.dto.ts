@@ -10,5 +10,7 @@ export class workerDto {
     @IsString()
     phone: string
 
+    karta: string
+    
     file: any
 }
