@@ -19,9 +19,13 @@ let WorkerService = class WorkerService {
         this.fileService = fileService;
     }
     async create(body, file) {
-        const uniqPhone = await this.prisma.worker.findFirst({ where: { phone: body.phone } });
+        const uniqPhone = await this.prisma.worker.findUnique({ where: { phone: body.phone } });
         if (uniqPhone) {
             throw new common_1.BadRequestException('Этот номер уже существует');
+        }
+        const uniqKarta = await this.prisma.worker.findUnique({ where: { karta: body.karta } });
+        if (uniqKarta) {
+            throw new common_1.BadRequestException('Нельзя записывать на одну карту несколько человек');
         }
         const fileName = await this.fileService.createFile(file);
         const worker = await this.prisma.worker.create({
@@ -36,7 +40,7 @@ let WorkerService = class WorkerService {
         return worker;
     }
     async del(idRaba) {
-        const workerPoisk = await this.prisma.worker.findFirst({ where: { id: +idRaba } });
+        const workerPoisk = await this.prisma.worker.findUnique({ where: { id: +idRaba } });
         if (workerPoisk) {
             await this.prisma.worker.delete({ where: { id: +idRaba } });
         }
@@ -45,9 +49,17 @@ let WorkerService = class WorkerService {
         };
     }
     async update(id, body, file) {
-        const workerPoisk = await this.prisma.worker.findFirst({ where: { id: +id } });
+        const workerPoisk = await this.prisma.worker.findUnique({ where: { id: +id } });
         if (!workerPoisk) {
             throw new common_1.BadRequestException('Не могу найти работника под этим id');
+        }
+        const uniqPhone = await this.prisma.worker.findFirst({ where: { phone: body.phone, id: { not: +id } } });
+        if (uniqPhone) {
+            throw new common_1.BadRequestException('Этот номер уже существует');
+        }
+        const uniqKarta = await this.prisma.worker.findFirst({ where: { karta: body.karta, id: { not: +id } } });
+        if (uniqKarta) {
+            throw new common_1.BadRequestException('Нельзя записывать на одну карту несколько человек');
         }
         const { name, otdel, phone, karta } = body;
         const fileName = await this.fileService.createFile(file);

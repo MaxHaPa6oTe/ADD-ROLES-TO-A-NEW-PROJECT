@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model User {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now()) @map("created_at")
@@ -18,6 +23,7 @@ model User {
   email      String   @unique
   password   String
   name       String   @unique
+  role       Role     @default(USER)
 }
 
 model Otmetka {
@@ -25,7 +31,10 @@ model Otmetka {
   createdAt  DateTime @default(now()) @map("created_at")
   updateAt   DateTime @updatedAt @map("updated_at")
 
-  karta       String
+  worker     Worker  @relation(fields: [workerId], references: [id])
+  workerId   Int     
+  mesto      Mesto   @relation(fields: [mestoId], references: [id])
+  mestoId    Int
 }
 
 model Worker {
@@ -35,7 +44,22 @@ model Worker {
 
   otdel      String
   name       String
-  karta      String   @unique
   phone      String   @default("") @unique
   avatarPath String   @default("/uploads/default-avatar.png") @map("avatar_path")
+  karta      Int      @unique 
+
+  mesto      Mesto[]
+  otmetka    Otmetka[]
+}
+
+model Mesto {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  updateAt   DateTime @updatedAt @map("updated_at")
+
+  name       String    @unique
+  
+  otmetka    Otmetka[]
+  worker     Worker    @relation(fields: [workerId], references: [id])
+  workerId   Int
 }
