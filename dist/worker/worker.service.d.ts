@@ -5,15 +5,15 @@ export declare class WorkerService {
     private prisma;
     private fileService;
     constructor(prisma: PrismaService, fileService: FileService);
-    create(body: workerDto, file: any): Promise<{
+    create(body: workerDto, photo: any): Promise<{
         id: number;
         createdAt: Date;
         updateAt: Date;
         otdel: string;
-        name: string;
-        karta: string;
+        fio: string;
         phone: string;
-        avatarPath: string;
+        karta: string;
+        photo: string;
     }>;
     del(idRaba: number): Promise<{
         message: string;
@@ -26,9 +26,9 @@ export declare class WorkerService {
         createdAt: Date;
         updateAt: Date;
         otdel: string;
-        name: string;
-        karta: string;
+        fio: string;
         phone: string;
-        avatarPath: string;
+        karta: string;
+        photo: string;
     }>;
 }

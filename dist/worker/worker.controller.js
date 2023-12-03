@@ -23,14 +23,14 @@ let WorkerController = class WorkerController {
     constructor(workerService) {
         this.workerService = workerService;
     }
-    async createWorker(body, file) {
-        return this.workerService.create(body, file);
+    async createWorker(body, photo) {
+        return this.workerService.create(body, photo);
     }
     async del(id) {
         return this.workerService.del(id);
     }
-    async update(body, file, id) {
-        return this.workerService.update(id, body, file);
+    async update(body, photo, id) {
+        return this.workerService.update(id, body, photo);
     }
     async obzorRaba(id) {
         return this.workerService.obzorRaba(id);
@@ -41,7 +41,7 @@ __decorate([
     (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     (0, common_1.HttpCode)(201),
     (0, common_1.Post)('create'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('photo')),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
@@ -59,7 +59,7 @@ __decorate([
 __decorate([
     (0, http_1.Put)(':id'),
     (0, auth_decorator_1.Auth)(),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('photo')),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.UploadedFile)()),
     __param(2, (0, common_1.Param)('id')),

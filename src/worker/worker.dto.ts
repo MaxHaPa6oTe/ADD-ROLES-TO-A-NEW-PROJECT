@@ -1,16 +1,18 @@
-import { MinLength, IsString, MaxLength, IsNumber, isString } from "class-validator";
+import { IsString, IsNumber } from "class-validator";
 
 export class workerDto {
     @IsString()
     otdel: string
 
     @IsString()
-    name: string
+    fio: string
 
     @IsString()
     phone: string
-
+    // @IsNumber()
+    // phone: number
+    @IsString()
     karta: string
-    
-    file: any
+    // @IsNumber()
+    // karta: number
 }

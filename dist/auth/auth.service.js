@@ -44,14 +44,6 @@ let AuthService = class AuthService {
         };
     }
     async register(dto) {
-        const oldUser = await this.prisma.user.findUnique({
-            where: {
-                email: dto.email
-            }
-        });
-        if (oldUser) {
-            throw new common_1.BadRequestException('Данная почта уже занята');
-        }
         const unName = await this.prisma.user.findUnique({
             where: {
                 name: dto.name
@@ -62,7 +54,6 @@ let AuthService = class AuthService {
         }
         const user = await this.prisma.user.create({
             data: {
-                email: dto.email,
                 name: dto.name,
                 password: await (0, argon2_1.hash)(dto.password)
             }
@@ -86,22 +77,22 @@ let AuthService = class AuthService {
     returnUserFields(user) {
         return {
             id: user.id,
-            email: user.email,
-            name: user.name
+            name: user.name,
+            role: user.role
         };
     }
     async validateUser(dto) {
         const user = await this.prisma.user.findUnique({
             where: {
-                email: dto.email
+                name: dto.name
             }
         });
         if (!user) {
-            throw new common_1.NotFoundException('Пользователь не найден');
+            throw new common_1.NotFoundException('Неверный логин или пароль');
         }
         const isValid = await (0, argon2_1.verify)(user.password, dto.password);
         if (!isValid) {
-            throw new common_1.UnauthorizedException('Инвалид пароль');
+            throw new common_1.UnauthorizedException('Неверный логин или пароль');
         }
         return user;
     }

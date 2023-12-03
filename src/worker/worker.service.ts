@@ -1,4 +1,4 @@
-import { Injectable,InternalServerErrorException,BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { workerDto } from './worker.dto';
 import { FileService } from './file/file.service';
@@ -8,23 +8,23 @@ export class WorkerService {
     constructor(private prisma: PrismaService,
         private fileService: FileService) {}
 
-    async create(body: workerDto, file: any) {
+    async create(body: workerDto, photo: any) {
         const uniqPhone = await this.prisma.worker.findUnique({where: {phone: body.phone}})
         if (uniqPhone) {
             throw new BadRequestException('Этот номер уже существует')
         }
         const uniqKarta = await this.prisma.worker.findUnique({where: {karta: body.karta}})
         if (uniqKarta) {
-            throw new BadRequestException('Нельзя записывать на одну карту несколько человек')
+            throw new BadRequestException('Эта карта уже занята')
         }
-        const fileName = await this.fileService.createFile(file);
+        const fileName = await this.fileService.createFile(photo);
         const worker = await this.prisma.worker.create({
             data: {
-                name: body.name,
+                fio: body.fio,
                 otdel: body.otdel,
                 phone: body.phone,
                 karta: body.karta,
-                avatarPath: fileName
+                photo: fileName
             }
         })
         return worker        
@@ -51,31 +51,34 @@ export class WorkerService {
         }
         const uniqKarta = await this.prisma.worker.findFirst({where: {karta: body.karta,id:{not: +id}}})
         if (uniqKarta) {
-            throw new BadRequestException('Нельзя записывать на одну карту несколько человек')
+            throw new BadRequestException('Эта карта уже занята')
         }
-        const {name,otdel,phone,karta} = body
-        const fileName = await this.fileService.createFile(file);
-        if (fileName) {
+        const {fio,otdel,phone,karta} = body
+        let fileName:string
+        if (file) {
+            fileName = await this.fileService.createFile(file);
+        } else {
+            fileName = workerPoisk.photo
+        }
             await this.prisma.worker.update({
             where: {
                 id:+id
             },
             data: {
-                name,
+                fio,
                 otdel,
-                phone,
-                karta,
-                avatarPath: fileName
+                phone: phone,
+                karta: karta,
+                photo: fileName
             }
         })
-    }
     return {
         message: 'Данные работника изменены'
     }
     }
 
     async obzorRaba (id:number) {
-        const worker = await this.prisma.worker.findFirst({where: {id: +id}})
+        const worker = await this.prisma.worker.findUnique({where: {id: +id}})
         if (!worker) {
             throw new BadRequestException('Не могу найти работника под этим id')
         }

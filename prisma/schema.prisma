@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,21 +17,9 @@ model User {
   createdAt  DateTime @default(now()) @map("created_at")
   updateAt   DateTime @updatedAt @map("updated_at")
 
-  email      String   @unique
-  password   String
   name       String   @unique
+  password   String
   role       Role     @default(USER)
-}
-
-model Otmetka {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now()) @map("created_at")
-  updateAt   DateTime @updatedAt @map("updated_at")
-
-  worker     Worker  @relation(fields: [workerId], references: [id])
-  workerId   Int     
-  mesto      Mesto   @relation(fields: [mestoId], references: [id])
-  mestoId    Int
 }
 
 model Worker {
@@ -43,23 +28,42 @@ model Worker {
   updateAt   DateTime @updatedAt @map("updated_at")
 
   otdel      String
-  name       String
-  phone      String   @default("") @unique
-  avatarPath String   @default("/uploads/default-avatar.png") @map("avatar_path")
-  karta      Int      @unique 
+  fio        String
+  phone      String      @unique
+  karta      String      @unique 
+  photo      String   @default("default-avatar.png")
 
-  mesto      Mesto[]
+  dostyp     Dostyp[]
   otmetka    Otmetka[]
 }
 
-model Mesto {
+model Tyrniket {
+  id         Int      @id @default(autoincrement())
+
+  info       String   @unique
+
+  dostyp     Dostyp[]
+  otmetka    Otmetka[]
+}
+
+model Dostyp {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now()) @map("created_at")
+  
+  worker     Worker   @relation(fields: [workerId], references: [id])
+  workerId   Int
+  tyrniket   Tyrniket @relation(fields: [tyrniketId], references: [id])
+  tyrniketId Int
+}
+
+model Otmetka {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now()) @map("created_at")
   updateAt   DateTime @updatedAt @map("updated_at")
 
-  name       String    @unique
-  
-  otmetka    Otmetka[]
-  worker     Worker    @relation(fields: [workerId], references: [id])
+  worker     Worker   @relation(fields: [workerId], references: [id])
   workerId   Int
+  tyrniket   Tyrniket @relation(fields: [tyrniketId], references: [id])
+  tyrniketId Int
 }
+

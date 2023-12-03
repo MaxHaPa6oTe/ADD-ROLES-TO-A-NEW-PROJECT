@@ -21,9 +21,13 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], workerDto.prototype, "name", void 0);
+], workerDto.prototype, "fio", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], workerDto.prototype, "phone", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], workerDto.prototype, "karta", void 0);
 //# sourceMappingURL=worker.dto.js.map
