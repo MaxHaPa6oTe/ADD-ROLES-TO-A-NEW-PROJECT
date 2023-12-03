@@ -12,12 +12,12 @@ export class WorkerController {
   @UsePipes(new ValidationPipe())
   @HttpCode(201)
   @Post('create')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('photo'))
   async createWorker(
     @Body() body: workerDto,
-    @UploadedFile() file:any
+    @UploadedFile() photo:any
   ) {
-    return this.workerService.create(body, file)
+    return this.workerService.create(body, photo)
   }
 
   @Auth()
@@ -28,12 +28,12 @@ export class WorkerController {
 
   @Put(':id')
   @Auth()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('photo'))
   async update(@Body() body:workerDto,
-  @UploadedFile() file:any,
+  @UploadedFile() photo:any,
   @Param('id') id:number
   ) {
-    return this.workerService.update(id ,body, file)
+    return this.workerService.update(id ,body, photo)
   }
 
   @Get(':id')

@@ -18,23 +18,23 @@ let WorkerService = class WorkerService {
         this.prisma = prisma;
         this.fileService = fileService;
     }
-    async create(body, file) {
+    async create(body, photo) {
         const uniqPhone = await this.prisma.worker.findUnique({ where: { phone: body.phone } });
         if (uniqPhone) {
             throw new common_1.BadRequestException('Этот номер уже существует');
         }
         const uniqKarta = await this.prisma.worker.findUnique({ where: { karta: body.karta } });
         if (uniqKarta) {
-            throw new common_1.BadRequestException('Нельзя записывать на одну карту несколько человек');
+            throw new common_1.BadRequestException('Эта карта уже занята');
         }
-        const fileName = await this.fileService.createFile(file);
+        const fileName = await this.fileService.createFile(photo);
         const worker = await this.prisma.worker.create({
             data: {
-                name: body.name,
+                fio: body.fio,
                 otdel: body.otdel,
                 phone: body.phone,
                 karta: body.karta,
-                avatarPath: fileName
+                photo: fileName
             }
         });
         return worker;
@@ -59,30 +59,34 @@ let WorkerService = class WorkerService {
         }
         const uniqKarta = await this.prisma.worker.findFirst({ where: { karta: body.karta, id: { not: +id } } });
         if (uniqKarta) {
-            throw new common_1.BadRequestException('Нельзя записывать на одну карту несколько человек');
+            throw new common_1.BadRequestException('Эта карта уже занята');
         }
-        const { name, otdel, phone, karta } = body;
-        const fileName = await this.fileService.createFile(file);
-        if (fileName) {
-            await this.prisma.worker.update({
-                where: {
-                    id: +id
-                },
-                data: {
-                    name,
-                    otdel,
-                    phone,
-                    karta,
-                    avatarPath: fileName
-                }
-            });
+        const { fio, otdel, phone, karta } = body;
+        let fileName;
+        if (file) {
+            fileName = await this.fileService.createFile(file);
         }
+        else {
+            fileName = workerPoisk.photo;
+        }
+        await this.prisma.worker.update({
+            where: {
+                id: +id
+            },
+            data: {
+                fio,
+                otdel,
+                phone: phone,
+                karta: karta,
+                photo: fileName
+            }
+        });
         return {
             message: 'Данные работника изменены'
         };
     }
     async obzorRaba(id) {
-        const worker = await this.prisma.worker.findFirst({ where: { id: +id } });
+        const worker = await this.prisma.worker.findUnique({ where: { id: +id } });
         if (!worker) {
             throw new common_1.BadRequestException('Не могу найти работника под этим id');
         }

@@ -1,7 +1,6 @@
 import { Injectable, BadRequestException, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { regDto } from './dto/reg.dto';
-import { logDto } from './dto/log.dto'
+import { authDto } from './dto/auth.dto'
 import { hash, verify } from 'argon2';
 import { JwtService } from '@nestjs/jwt/dist';
 import { User } from '@prisma/client';
@@ -11,7 +10,7 @@ export class AuthService {
     constructor(private prisma: PrismaService,
         private jwt: JwtService) { }
 
-    async login(dto: logDto) {
+    async login(dto: authDto) {
         const user = await this.validateUser(dto)
         const tokens = await this.issueTokens(user.id)
 
@@ -39,15 +38,7 @@ export class AuthService {
         }
     }
 
-    async register(dto: regDto) {
-        const oldUser = await this.prisma.user.findUnique({
-            where: {
-                email: dto.email
-            }
-        })
-        if (oldUser) {
-            throw new BadRequestException('Данная почта уже занята')
-        }
+    async register(dto: authDto) {
         const unName = await this.prisma.user.findUnique({
             where: {
                 name: dto.name
@@ -58,7 +49,6 @@ export class AuthService {
         }
         const user = await this.prisma.user.create({
             data: {
-                email: dto.email,
                 name: dto.name,
                 password: await hash(dto.password)
             }
@@ -84,23 +74,23 @@ export class AuthService {
     private returnUserFields(user: User) {
         return {
             id: user.id,
-            email: user.email,
-            name: user.name
+            name: user.name,
+            role: user.role
         }
     }
 
-    private async validateUser(dto: logDto) {
+    private async validateUser(dto: authDto) {
         const user = await this.prisma.user.findUnique({
             where: {
-                email: dto.email
+                name: dto.name
             }
         })
         if (!user) {
-            throw new NotFoundException('Пользователь не найден')
+            throw new NotFoundException('Неверный логин или пароль')
         }
         const isValid = await verify(user.password, dto.password)
         if (!isValid) {
-            throw new UnauthorizedException('Инвалид пароль')
+            throw new UnauthorizedException('Неверный логин или пароль')
         }
         return user
     }

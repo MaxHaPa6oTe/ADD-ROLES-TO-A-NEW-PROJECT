@@ -1,7 +1,6 @@
 export declare class workerDto {
     otdel: string;
-    name: string;
+    fio: string;
     phone: string;
     karta: string;
-    file: any;
 }

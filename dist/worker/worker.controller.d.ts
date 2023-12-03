@@ -3,20 +3,20 @@ import { workerDto } from './worker.dto';
 export declare class WorkerController {
     private readonly workerService;
     constructor(workerService: WorkerService);
-    createWorker(body: workerDto, file: any): Promise<{
+    createWorker(body: workerDto, photo: any): Promise<{
         id: number;
         createdAt: Date;
         updateAt: Date;
         otdel: string;
-        name: string;
-        karta: string;
+        fio: string;
         phone: string;
-        avatarPath: string;
+        karta: string;
+        photo: string;
     }>;
     del(id: number): Promise<{
         message: string;
     }>;
-    update(body: workerDto, file: any, id: number): Promise<{
+    update(body: workerDto, photo: any, id: number): Promise<{
         message: string;
     }>;
     obzorRaba(id: number): Promise<{
@@ -24,9 +24,9 @@ export declare class WorkerController {
         createdAt: Date;
         updateAt: Date;
         otdel: string;
-        name: string;
-        karta: string;
+        fio: string;
         phone: string;
-        avatarPath: string;
+        karta: string;
+        photo: string;
     }>;
 }

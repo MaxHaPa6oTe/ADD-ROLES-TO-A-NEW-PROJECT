@@ -9,20 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.logDto = void 0;
+exports.authDto = void 0;
 const class_validator_1 = require("class-validator");
-class logDto {
+class authDto {
 }
-exports.logDto = logDto;
+exports.authDto = authDto;
 __decorate([
-    (0, class_validator_1.IsEmail)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], logDto.prototype, "email", void 0);
+], authDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.MinLength)(6, {
         message: 'Пароль должен содержать не менее 6 символов'
     }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], logDto.prototype, "password", void 0);
-//# sourceMappingURL=log.dto.js.map
+], authDto.prototype, "password", void 0);
+//# sourceMappingURL=auth.dto.js.map

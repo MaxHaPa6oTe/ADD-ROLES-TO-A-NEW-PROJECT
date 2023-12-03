@@ -15,8 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
-const reg_dto_1 = require("./dto/reg.dto");
-const log_dto_1 = require("./dto/log.dto");
+const auth_dto_1 = require("./dto/auth.dto");
 const refresh_token_dto_1 = require("./dto/refresh-token.dto");
 let AuthController = class AuthController {
     constructor(authService) {
@@ -39,7 +38,7 @@ __decorate([
     (0, common_1.Post)('log'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [log_dto_1.logDto]),
+    __metadata("design:paramtypes", [auth_dto_1.authDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
@@ -57,7 +56,7 @@ __decorate([
     (0, common_1.Post)('reg'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [reg_dto_1.regDto]),
+    __metadata("design:paramtypes", [auth_dto_1.authDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 exports.AuthController = AuthController = __decorate([
