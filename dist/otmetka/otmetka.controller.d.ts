@@ -1,3 +1,4 @@
+import { StreamableFile } from '@nestjs/common';
 import { OtmetkaService } from './otmetka.service';
 import { dostypDto } from 'src/dostyp/dostyp.dto';
 export declare class OtmetkaController {
@@ -20,4 +21,5 @@ export declare class OtmetkaController {
         workerId: number;
         tyrniketId: number;
     })[]>;
+    downloadXlsxFile(): Promise<StreamableFile>;
 }

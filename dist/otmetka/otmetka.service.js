@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtmetkaService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
+const xlsx_1 = require("xlsx");
 let OtmetkaService = class OtmetkaService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -48,6 +49,36 @@ let OtmetkaService = class OtmetkaService {
             },
         });
         return otmetki;
+    }
+    async download() {
+        const otmetki = await this.prisma.otmetka.findMany({
+            where: {
+                tyrniketId: 9,
+                workerId: 1
+            },
+            include: {
+                tyrniket: { select: {
+                        info: true
+                    } },
+                worker: { select: {
+                        fio: true
+                    } }
+            },
+        });
+        let arr = [];
+        otmetki.map(info => {
+            let arr1 = [];
+            let date = info.createdAt.toString();
+            arr1.push(info.tyrniket.info);
+            arr1.push(date.substring(0, date.length - 37));
+            arr1.push(info.worker.fio);
+            arr.push(arr1);
+        });
+        const ws = xlsx_1.utils.aoa_to_sheet(arr);
+        const wb = xlsx_1.utils.book_new();
+        xlsx_1.utils.book_append_sheet(wb, ws, "Data");
+        const buf = (0, xlsx_1.write)(wb, { type: "buffer", bookType: "xlsx" });
+        return new common_1.StreamableFile(buf);
     }
 };
 exports.OtmetkaService = OtmetkaService;

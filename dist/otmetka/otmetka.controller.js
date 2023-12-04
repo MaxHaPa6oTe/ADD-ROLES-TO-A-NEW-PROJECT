@@ -26,6 +26,9 @@ let OtmetkaController = class OtmetkaController {
     async all(dto) {
         return this.otmetkaService.all(dto);
     }
+    async downloadXlsxFile() {
+        return this.otmetkaService.download();
+    }
 };
 exports.OtmetkaController = OtmetkaController;
 __decorate([
@@ -44,6 +47,13 @@ __decorate([
     __metadata("design:paramtypes", [dostyp_dto_1.dostypDto]),
     __metadata("design:returntype", Promise)
 ], OtmetkaController.prototype, "all", null);
+__decorate([
+    (0, common_1.Get)('download'),
+    (0, common_1.Header)('Content-Disposition', 'attachment; filename="SheetJSNest.xlsx"'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], OtmetkaController.prototype, "downloadXlsxFile", null);
 exports.OtmetkaController = OtmetkaController = __decorate([
     (0, common_1.Controller)('otmetka'),
     __metadata("design:paramtypes", [otmetka_service_1.OtmetkaService])

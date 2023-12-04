@@ -1,3 +1,4 @@
+import { StreamableFile } from '@nestjs/common';
 import { dostypDto } from 'src/dostyp/dostyp.dto';
 import { PrismaService } from 'src/prisma.service';
 export declare class OtmetkaService {
@@ -20,4 +21,5 @@ export declare class OtmetkaService {
         workerId: number;
         tyrniketId: number;
     })[]>;
+    download(): Promise<StreamableFile>;
 }
