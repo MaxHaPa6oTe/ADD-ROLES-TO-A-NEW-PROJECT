@@ -9,10 +9,15 @@ export class OtmetkaService {
 
     async add(dto:dostypDto) {
         try {
+        const worker = await this.prisma.worker.findUnique({
+            where: {
+                karta: String(dto.worker)
+            }
+        })
         await this.prisma.otmetka.create({
             data: {
                 tyrniketId: dto.tyrniket,
-                workerId: dto.worker
+                workerId: worker.id
             }
         })
         return {
@@ -61,7 +66,7 @@ export class OtmetkaService {
             let arr1 = []
             let date = info.createdAt.toString()
             arr1.push(info.tyrniket.info)
-            arr1.push(date.substring(0, date.length - 37))
+            arr1.push(date.substring(4, date.length - 37))
             arr1.push(info.worker.fio)
             arr.push(arr1)
         })

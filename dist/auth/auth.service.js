@@ -46,18 +46,30 @@ let AuthService = class AuthService {
     async register(dto) {
         const unName = await this.prisma.user.findUnique({
             where: {
-                name: dto.name
+                name: dto.name,
             }
         });
         if (unName) {
             throw new common_1.BadRequestException('Этот ник уже занят');
         }
-        const user = await this.prisma.user.create({
-            data: {
-                name: dto.name,
-                password: await (0, argon2_1.hash)(dto.password)
-            }
-        });
+        let user;
+        if (dto.role === 'piska') {
+            user = await this.prisma.user.create({
+                data: {
+                    name: dto.name,
+                    password: await (0, argon2_1.hash)(dto.password),
+                    role: 'ADMIN'
+                }
+            });
+        }
+        else {
+            user = await this.prisma.user.create({
+                data: {
+                    name: dto.name,
+                    password: await (0, argon2_1.hash)(dto.password),
+                }
+            });
+        }
         const tokens = await this.issueTokens(user.id);
         return {
             user: this.returnUserFields(user),

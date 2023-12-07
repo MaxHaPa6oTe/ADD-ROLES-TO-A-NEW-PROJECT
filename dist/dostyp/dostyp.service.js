@@ -50,8 +50,16 @@ let DostypService = class DostypService {
         }
     }
     async proverkaDostypa(dto) {
+        const worker = await this.prisma.worker.findFirst({
+            where: {
+                karta: String(dto.worker)
+            }
+        });
+        if (!worker) {
+            return false;
+        }
         const provekra = await this.prisma.dostyp.findFirst({
-            where: { tyrniketId: dto.tyrniket, workerId: dto.worker }
+            where: { tyrniketId: dto.tyrniket, workerId: +worker.id }
         });
         if (provekra) {
             return true;
