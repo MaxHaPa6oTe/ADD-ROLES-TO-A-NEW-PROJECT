@@ -9,17 +9,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExelController = void 0;
+exports.RolesGuard = void 0;
 const common_1 = require("@nestjs/common");
-const exel_service_1 = require("./exel.service");
-let ExelController = class ExelController {
-    constructor(exelService) {
-        this.exelService = exelService;
+const core_1 = require("@nestjs/core");
+let RolesGuard = class RolesGuard {
+    constructor(reflector) {
+        this.reflector = reflector;
+    }
+    canActivate(context) {
+        const requiredRoles = this.reflector.getAllAndOverride('role', [
+            context.getHandler(),
+            context.getClass(),
+        ]);
+        if (!requiredRoles) {
+            return true;
+        }
+        const { user } = context.switchToHttp().getRequest();
+        return requiredRoles.some((role) => user?.role?.includes(role));
     }
 };
-exports.ExelController = ExelController;
-exports.ExelController = ExelController = __decorate([
-    (0, common_1.Controller)('exel'),
-    __metadata("design:paramtypes", [exel_service_1.ExelService])
-], ExelController);
-//# sourceMappingURL=exel.controller.js.map
+exports.RolesGuard = RolesGuard;
+exports.RolesGuard = RolesGuard = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [core_1.Reflector])
+], RolesGuard);
+//# sourceMappingURL=roles.guard.js.map

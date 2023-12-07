@@ -19,6 +19,10 @@ const worker_dto_1 = require("./worker.dto");
 const platform_express_1 = require("@nestjs/platform-express");
 const http_1 = require("@nestjs/common/decorators/http");
 const auth_decorator_1 = require("../auth/decorator/auth.decorator");
+const has_roles_decorator_1 = require("../auth/decorator/has-roles.decorator");
+const role_enum_1 = require("../auth/decorator/role.enum");
+const roles_guard_1 = require("../auth/decorator/roles.guard");
+const jwt_auth_guard_1 = require("../auth/decorator/jwt-auth.guard");
 let WorkerController = class WorkerController {
     constructor(workerService) {
         this.workerService = workerService;
@@ -69,6 +73,9 @@ __decorate([
 ], WorkerController.prototype, "update", null);
 __decorate([
     (0, http_1.Get)(':id'),
+    (0, has_roles_decorator_1.HasRoles)(role_enum_1.Role.User),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, common_1.HttpCode)(200),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),

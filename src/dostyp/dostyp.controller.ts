@@ -23,6 +23,7 @@ export class DostypController {
   }
 
   @Post('proverka')
+  @HttpCode(200)
   @UsePipes(new ValidationPipe())
   async proverka(@Body() dto: dostypDto) {
     return this.dostypService.proverkaDostypa(dto)
